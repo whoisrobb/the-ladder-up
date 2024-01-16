@@ -17,12 +17,14 @@ const createPost = async (req, res) => {
     try {
         const { userId } = req.params;
         const { title, content, category, summary } = req.body;
+        const file = req.file;
 
         const newPost = await Post.create({
             Title: title,
             Summary: summary,
             Content: content,
             Category: category,
+            CoverImage: file.filename,
             UserUserID: userId
         })
 

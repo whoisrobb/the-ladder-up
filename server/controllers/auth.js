@@ -1,6 +1,7 @@
 const db = require("../models");
 const jwt = require("jsonwebtoken");
 const User = db.User;
+const { Op } = require('sequelize');
 
 
 /* GET ALL USERS */
@@ -46,8 +47,14 @@ const loginUser = async (req, res) => {
     try {
         const { value, password } = req.body;
 
-        const user = await User.findOne({ 
-            where: { Username: value }
+        // Check for user using both username and email
+        const user = await User.findOne({
+            where: {
+                [Op.or]: [
+                    { Username: value },
+                    { Email: value },
+                ],
+            },
         });
 
         if (!user) {

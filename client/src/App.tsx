@@ -7,19 +7,22 @@ import { ThemeProvider } from './components/theme-provider'
 import Post from './pages/Post'
 import Write from './pages/Write'
 import Edit from './pages/Edit'
+import { AppProvider } from './components/app-provider'
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Routes>
-        <Route path='/' element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path='post/:id' element={<Post />} />
-          <Route path='write' element={<Write />} />
-          <Route path='edit/:id' element={<Edit />} />
-          <Route path='register' element={<Register />} />
-        </Route>
-      </Routes>
+      <AppProvider>
+        <Routes>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path='post/:id' element={<Post />} />
+            <Route path='write' element={<Write />} />
+            <Route path='edit/:id' element={<Edit />} />
+            <Route path='register' element={<Register />} />
+          </Route>
+        </Routes>
+      </AppProvider>
     </ThemeProvider>
   )
 }

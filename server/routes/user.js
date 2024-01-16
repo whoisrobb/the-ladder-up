@@ -1,5 +1,6 @@
 const express = require('express');
 const { createPost, getAllPosts } = require('../controllers/user');
+const upload = require('../controllers/upload');
 const router = express.Router();
 
 
@@ -7,6 +8,6 @@ const router = express.Router();
 router.get('/posts', getAllPosts);
 
 /* CREATE POST */
-router.post('/post/create/:userId', createPost);
+router.post('/post/create/:userId', upload.single('file'), createPost);
 
 module.exports = router;

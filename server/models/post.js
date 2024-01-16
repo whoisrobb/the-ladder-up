@@ -17,11 +17,17 @@ module.exports = ((sequelize, DataTypes) => {
             allowNull: false
         },
         Content: {
-            type: Sequelize.TEXT
+            type: Sequelize.TEXT,
+            allowNull: false
         },
         Category: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
         },
+        CoverImage: {
+            type: Sequelize.STRING,
+            allowNull: false
+        }
     });
 
     Post.associate = (models) => {

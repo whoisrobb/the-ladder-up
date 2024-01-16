@@ -7,4 +7,4 @@ export function cn(...inputs: ClassValue[]) {
 
 export const serverUrl = 'http://localhost:3000';
 
-export const categories = ['Music', 'Fashion', 'Films', 'Sports', 'Interior Design', 'Culinary'];
+export const categories = ['Music', 'Fashion', 'Films', 'Sports', 'Decor', 'Culinary'];

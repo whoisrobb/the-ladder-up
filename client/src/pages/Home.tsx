@@ -58,7 +58,7 @@ const Home = () => {
           <i className="uil uil-layers text-9xl"></i>
           <div className="">
             <div className="text-5xl font-bold">Culture Canvas</div>
-            <div className="">From soulful tunes to runway chic, blockbuster films to sports spectacles, chic interiors to culinary delights.</div>
+            <div className="text-muted-foreground">From soulful tunes to runway chic, blockbuster films to sports spectacles, chic interiors to culinary delights.</div>
           </div>
         </div>
         <div className="flex items-center gap-12">

@@ -48,13 +48,20 @@ const Write = () => {
   };
 
   const handleSubmit = async () => {
+    const formData = new FormData();
+
+    formData.append('title', title);
+    formData.append('summary', summary);
+    formData.append('category', category);
+    formData.append('content', content);
+    if (file) {
+        formData.append('file', file);
+    }
+      
     try {
         const response = await fetch(`${serverUrl}/user/post/create/${userData?.userId}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ title, summary, category, content })
+            body: formData
         })
         if (response.ok) {
           navigate('/');

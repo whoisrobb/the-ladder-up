@@ -1,88 +1,169 @@
-import React, { useState } from 'react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+// import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { serverUrl } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
+import {
+  Form,
+  FormControl,
+  // FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { registerSchema } from "@/lib/auth"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { useApp } from "../components/app-provider"
 
+type Input = z.infer<typeof registerSchema>;
 
 const Register = () => {
-  const navigate = useNavigate()
-
-  const [firstName, setFirstName] = useState('Robbie');
-  const [lastName, setLastName] = useState('Muchiri');
-  const [username, setUsername] = useState('firstmate_rob');
-  const [email, setEmail] = useState('developedbyrobbie@gmail.com');
-  const [password, setPassword] = useState('iamkharri');
-
-  const formData = { firstName, lastName, email, username, password }
-
-  // const handleSubmit = async (): Promise<void> => {
-  //   try {
-  //       const response = await fetch(`${serverUrl}/auth/register`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           body: JSON.stringify(formData)
-  //         }
-  //       })
-  //       .then((response) => {
-  //           if (response.ok) {
-  //               console.log('success');
-  //           }
-  //           return response.json();
-  //       })
-  //       .then((data) => {
-  //         console.log(data)
-  //       })
-  //   } catch (err) {
-  //     console.error(err)
-  //   }
-  // }
-
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch(`${serverUrl}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          username,
-          email,
-          password,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('accessToken', data.token);
-        navigate('/');
-      } else {
-        const errorData = await response.json();
-        console.error(errorData);
-      }
-    } catch (error) {
-        console.error(error);
+  const { handleRegister } = useApp();
+  const form = useForm<Input>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
     }
-  };
+  })
+  
+  const onSubmit = async(values: Input) => {
+    try {
+      await handleRegister(values.firstName, values.lastName, values.username, values.email, values.password);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
-    <div className='w-96'>
-      <form className='mx-4' onSubmit={(e) => {e.preventDefault(); handleSubmit()}}>
-        <p className='bg-gray-100 py-1 px-2 my-1 rounded'>{firstName}</p>
-        <p className='bg-gray-100 py-1 px-2 my-1 rounded'>{lastName}</p>
-        <p className='bg-gray-100 py-1 px-2 my-1 rounded'>{username}</p>
-        <p className='bg-gray-100 py-1 px-2 my-1 rounded'>{email}</p>
-        <p className='bg-gray-100 py-1 px-2 my-1 rounded'>{password}</p>
-        <div className="flex items-center gap-2">
-          <Button variant="secondary">cancel</Button>
-          {/* <Button variant="outline">register</Button> */}
-          <Button>register</Button>
-        </div>
-      </form>
-    </div>
+    <Card className="w-[350px]">
+      <CardHeader>
+        <CardTitle>Register</CardTitle>
+        <CardDescription>Join us today, culture freak.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="First Name" {...field} />
+                  </FormControl>
+                  {/* <FormDescription>
+                    This is your public display name.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Last Name" {...field} />
+                  </FormControl>
+                  {/* <FormDescription>
+                    This is your public display name.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Username" {...field} />
+                  </FormControl>
+                  {/* <FormDescription>
+                    This is your public display name.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  {/* <FormDescription>
+                    This is your public display name.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Password" {...field} type="password" />
+                  </FormControl>
+                  {/* <FormDescription>
+                    This is your public display name.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Confirm password" {...field} type="password" />
+                  </FormControl>
+                  {/* <FormDescription>
+                    This is your public display name.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   )
 }
 
-export default Register
+export default Register;
