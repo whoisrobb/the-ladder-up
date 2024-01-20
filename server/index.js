@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const dotenv = require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const authRoutes = require('./routes/auth');
@@ -8,12 +9,14 @@ const { sequelize } = require('./models');
 
 /* CONFIGURATIONS */
 const app = express();
+app.use('/files', express.static(path.join(__dirname, 'files')));
 app.use(express.json());
 app.use(cors());
 
 
 /* SEQUELIZE SETUP */
 sequelize.sync({ force: true })
+// sequelize.sync()
     .then(() => {
         console.log('Database and tables synced')
     })

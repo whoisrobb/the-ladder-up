@@ -49,9 +49,10 @@ module.exports = ((sequelize, DataTypes) => {
     User.prototype.isValidPassword = async function (password) {
         return await bcrypt.compare(password, this.Password);
     };
-
+    // User model
     User.associate = (models) => {
         User.hasMany(models.Post);
+        User.hasMany(models.Comment);
     };
 
     return User;

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPost, getAllPosts } = require('../controllers/user');
+const { createPost, getAllPosts, getSinglePost, editPost, deletePost } = require('../controllers/user');
 const upload = require('../controllers/upload');
 const router = express.Router();
 
@@ -9,5 +9,15 @@ router.get('/posts', getAllPosts);
 
 /* CREATE POST */
 router.post('/post/create/:userId', upload.single('file'), createPost);
+
+/* GET SINGLE POST */
+router.get('/post/:postId', getSinglePost);
+
+/* EDIT POST */
+router.put('/post/edit/:postId', editPost);
+
+/* DELETE POST */
+router.delete('/post/delete/:postId', deletePost);
+
 
 module.exports = router;

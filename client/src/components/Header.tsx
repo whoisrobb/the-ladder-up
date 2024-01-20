@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ModeToggle } from './ui/mode-toggle'
 import {
@@ -37,6 +38,9 @@ type Input = z.infer<typeof loginSchema>;
 const Header = () => {
   const { user, handleLogout, handleLogin } = useApp();
   const navigate = useNavigate();
+
+  const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<Input>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -106,7 +110,7 @@ const Header = () => {
         <>
           <ModeToggle />
           
-          <Dialog>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button>Login</Button>
               {/* <Button variant="outline">Edit Profile</Button> */}
@@ -159,7 +163,7 @@ const Header = () => {
               </Form>
               <DialogFooter className='text-center'>
                 Don't have an account? 
-                <Link className='text-slate-500' to={'/register'}>Sign Up</Link>
+                <Link className='text-slate-500' to={'/register'} onClick={() => setIsOpen(false)}>Sign Up</Link>
               </DialogFooter>
             </DialogContent>
           </Dialog>

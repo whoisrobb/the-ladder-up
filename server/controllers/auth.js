@@ -2,6 +2,7 @@ const db = require("../models");
 const jwt = require("jsonwebtoken");
 const User = db.User;
 const { Op } = require('sequelize');
+// const { loadData } = require('./utils');
 
 
 /* GET ALL USERS */
@@ -27,14 +28,18 @@ const createUser = async (req, res) => {
             Password: password
         });
 
+        const userId = newUser.UserID
+
         const token = jwt.sign(
             {
-                userId: newUser.UserID,
+                userId: userId,
                 username: newUser.Username,
                 email: newUser.Email
             },
             process.env.JWT_SECRET
         );
+
+        // loadData(userId);
 
         res.status(201).json({ message: 'Success!', token });
     } catch (err) {
