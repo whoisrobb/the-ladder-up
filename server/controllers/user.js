@@ -143,7 +143,26 @@ const deletePost = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
-  
+
+/* CREATING COMMENT */
+const createComment = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const { msg, postId } = req.body;
+
+        const newComment = await Comment.create({
+            Content: msg,
+            PostPostID: postId,
+            UserUserID: userId
+        });
+
+        res.status(201).json(newComment);
+    } catch (err) {
+
+    }
+};
+
   
 module.exports = {
     getAllPosts,
@@ -151,4 +170,5 @@ module.exports = {
     getSinglePost,
     editPost,
     deletePost,
+    createComment
 };

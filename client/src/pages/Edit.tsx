@@ -10,7 +10,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { useEffect, useState } from 'react'
-import { categories, serverUrl, testData } from '@/lib/utils'
+import { categories, serverUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate, useParams } from 'react-router-dom'

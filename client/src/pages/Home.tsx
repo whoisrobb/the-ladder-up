@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { categories, serverUrl } from '@/lib/utils'
+import { categories, formatDate, serverUrl } from '@/lib/utils'
 import { Link } from 'react-router-dom';
 // import EditorTest from '@/components/Editor'
 
@@ -18,11 +18,6 @@ type Post = {
   createdAt: string;
   updatedAt: string;
   UserUserID: string;
-};
-
-const formatDate = (createdAt: string): string => {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(createdAt).toLocaleDateString(undefined, options);
 };
 
 const Home = () => {

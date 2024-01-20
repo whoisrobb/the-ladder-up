@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPost, getAllPosts, getSinglePost, editPost, deletePost } = require('../controllers/user');
+const { createPost, getAllPosts, getSinglePost, editPost, deletePost, createComment } = require('../controllers/user');
 const upload = require('../controllers/upload');
 const router = express.Router();
 
@@ -18,6 +18,9 @@ router.put('/post/edit/:postId', editPost);
 
 /* DELETE POST */
 router.delete('/post/delete/:postId', deletePost);
+
+/* CREATE COMMENT */
+router.post('/post/comment/:userId', createComment);
 
 
 module.exports = router;
