@@ -1,19 +1,98 @@
 const db = require("../models");
+const { Op } = require('sequelize');
 const User = db.User;
 const Post = db.Post;
 const Comment = db.Comment;
 
 
+
+/* SEARCH POST */
+const searchPosts = async (req, res) => {
+  const searchTerm = req.query.searchTerm;
+
+  try {
+    const posts = await Post.findAll({
+      where: {
+        [Op.or]: [
+          {
+            Title: {
+              [Op.iLike]: `%${searchTerm}%`,
+            },
+          },
+          {
+            Summary: {
+              [Op.iLike]: `%${searchTerm}%`,
+            },
+          },
+          {
+            Content: {
+              [Op.iLike]: `%${searchTerm}%`,
+            },
+          },
+        ],
+      },
+      limit: 5,
+    });
+
+    const resultsWithContext = posts.map((post) => {
+        const context = {};
+
+        const getSnippet = (text, term) => {
+            const index = text.toLowerCase().indexOf(term.toLowerCase());
+            const start = Math.max(0, index - 15);
+            const end = Math.min(text.length, index + term.length + 15);
+            return `...${text.slice(start, end)}...`;
+        };
+      
+        if (post.Title.toLowerCase().includes(searchTerm.toLowerCase())) {
+            context.Title = getSnippet(post.Title, searchTerm);
+        }
+        if (post.Summary.toLowerCase().includes(searchTerm.toLowerCase())) {
+            context.Summary = getSnippet(post.Summary, searchTerm);
+        }
+        if (post.Content.toLowerCase().includes(searchTerm.toLowerCase())) {
+            context.Content = getSnippet(post.Content, searchTerm);
+        }
+
+    //   return { ...post.toJSON(), context };
+      return {
+        PostID: post.PostID,
+        context,
+      };
+    });
+
+    res.status(200).json(resultsWithContext);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 /* GET ALL POSTS */
 const getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.findAll({
-            include: [{
-                model: User,
-                attributes: ['Username'],
-            }],
-        });
-        res.status(200).json(posts)
+        const { category } = req.query;
+
+        let posts;
+        if (category) {
+            posts = await Post.findAll({
+                include: [{
+                    model: User,
+                    attributes: ['Username'],
+                }],
+                where: {
+                    Category: category,
+                },
+            });
+        } else {
+            posts = await Post.findAll({
+                include: [{
+                    model: User,
+                    attributes: ['Username'],
+                }],
+            });
+        }
+
+        res.status(200).json(posts);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -89,7 +168,6 @@ const getSinglePost = async (req, res) => {
     try {
         const postId = req.params.postId;
 
-        // Find the post with associated author and comments
         const post = await Post.findOne({
             where: { PostID: postId },
             include: [
@@ -170,5 +248,6 @@ module.exports = {
     getSinglePost,
     editPost,
     deletePost,
+    searchPosts,
     createComment
 };

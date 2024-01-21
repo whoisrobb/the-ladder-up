@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { categories, formatDate, serverUrl } from '@/lib/utils'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 // import EditorTest from '@/components/Editor'
 
 type User = {
@@ -20,17 +23,55 @@ type Post = {
   UserUserID: string;
 };
 
+type Context = {
+  Content: string;
+  Summary: string;
+  Title: string;
+}
+
+type Result = {
+  PostID: string;
+  context: Context;
+}
+
 const Home = () => {
+  const navigate = useNavigate();
   const [postsData, setPostsData] = useState<Post[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Result [] | null>(null);
+  const [inputActive, setInputActive] = useState(false)
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [category]);
+
+  useEffect(() => {
+    if (searchTerm !== '') {
+      searchQuery()
+    }
+  }, [searchTerm])
 
   const fetchPosts = async () => {
-    const response = await fetch(`${serverUrl}/user/posts`);
-    const data = await response.json();
-    setPostsData(data);
+    if (category) {
+      const response = await fetch(`${serverUrl}/user/posts?category=${category}`);
+      const data = await response.json();
+      setPostsData(data);
+    } else {
+      const response = await fetch(`${serverUrl}/user/posts?category}`);
+      const data = await response.json();
+      setPostsData(data);
+    }
+  };
+
+  const searchQuery = async () => {
+    try {
+      const response = await fetch(`${serverUrl}/user/post/search?searchTerm=${searchTerm}`);
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -43,17 +84,59 @@ const Home = () => {
         </div>
       </div>
       <div className="flex items-center gap-12">
-        <div className="">
-          <input
+        <div className="relative z-10 w-80">
+          <Input
             className='flex h-9 rounded-full w-80 border border-input bg-secondary px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
             type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder='search'
+            onFocus={() => setInputActive(true)}
+            onBlur={() => setInputActive(false)}
           />
+            
+          {inputActive && searchTerm !== '' ?
+          <div className='absolute bg-background w-80 flex p-1 border rounded flex-col my-1 gap-1'>
+            {searchResults?.map((result) => (
+              <Link to={`/post/${result.PostID}`} key={result.PostID} className='border hover:bg-secondary px-1 rounded'>
+                {result.context.Title && <p className="text-sm"><span className='text-sm font-bold'>Title:</span>{result.context.Title}</p>}
+                {result.context.Summary && <p className="text-sm"><span className='text-sm font-bold'>Summary:</span>{result.context.Summary}</p>}
+                {result.context.Content && <p className="text-sm"><span className='text-sm font-bold'>Content:</span>{result.context.Content}</p>}
+              </Link>
+            ))}
+          </div> : null}
         </div>
         <div className="flex items-center gap-4">
+          {category === null ?
+            <Button
+              onClick={() => setCategory(null)}
+            >
+              All
+            </Button>
+            :
+            <Button
+              variant='outline'
+              onClick={() => setCategory(null)}
+            >
+              All
+            </Button>
+          }
           {categories.map((cat, index) => (
-            <button className='bg-secondary px-4 py-1 capitalize' key={index}>{cat}</button>
+            cat === category ? (
+              <Button key={index} onClick={() => setCategory(cat)}>
+                {cat}
+              </Button>
+            ) : (
+              <Button
+                key={index}
+                variant="outline"
+                onClick={() => setCategory(cat)}
+              >
+                {cat}
+              </Button>
+            )
           ))}
+      
         </div>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-6 my-8">

@@ -1,8 +1,11 @@
 const express = require('express');
-const { createPost, getAllPosts, getSinglePost, editPost, deletePost, createComment } = require('../controllers/user');
+const { createPost, getAllPosts, getSinglePost, editPost, deletePost, createComment, searchPosts } = require('../controllers/user');
 const upload = require('../controllers/upload');
 const router = express.Router();
 
+
+/* SEARCH POST */
+router.get('/post/search', searchPosts)
 
 /* GET ALL POSTS */
 router.get('/posts', getAllPosts);

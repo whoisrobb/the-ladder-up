@@ -29,7 +29,7 @@ module.exports = ((sequelize, DataTypes) => {
             allowNull: false
         }
     });
-    // Post model
+    
     Post.associate = (models) => {
         Post.belongsTo(models.User);
         Post.hasMany(models.Comment);
