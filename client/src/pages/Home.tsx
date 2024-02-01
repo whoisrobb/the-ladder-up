@@ -1,45 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { categories, formatDate, serverUrl } from '@/lib/utils'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
-// import EditorTest from '@/components/Editor'
+import { Post, Result } from '@/lib/types';
 
-type User = {
-  Username: string;
-};
-
-type Post = {
-  PostID: string;
-  Title: string;
-  Summary: string;
-  content: any;
-  User: User;
-  Category: string;
-  CoverImage: string;
-  createdAt: string;
-  updatedAt: string;
-  UserUserID: string;
-};
-
-type Context = {
-  Content: string;
-  Summary: string;
-  Title: string;
-}
-
-type Result = {
-  PostID: string;
-  context: Context;
-}
 
 const Home = () => {
-  const navigate = useNavigate();
   const [postsData, setPostsData] = useState<Post[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<Result [] | null>(null);
+  const [searchResults, setSearchResults] = useState<Result[] | null>(null);
   const [inputActive, setInputActive] = useState(false)
 
   useEffect(() => {

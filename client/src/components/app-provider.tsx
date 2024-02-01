@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '@/lib/utils';
+import { toast } from './ui/use-toast';
 
 interface JwtPayload {
   userId: number;
@@ -60,13 +61,23 @@ const handleRegister = async (firstName: string, lastName: string, username: str
         body: JSON.stringify({ firstName, lastName, username, email, password }),
       });
       if (response.ok) {
-        const data = await response.json(); // Assuming API returns a JWT token
-        localStorage.setItem('accessToken', data.token);
-        setUser(jwtDecode<JwtPayload>(data.token)); // Update user state
+        const { token, message } = await response.json();
+        localStorage.setItem('accessToken', token);
+        const userData = jwtDecode<JwtPayload>(token)
+        setUser(userData);
+        toast({
+          title: `${message}`,
+          description: `Logged in as ${userData.username}`,
+        });
         navigate('/');
       } else {
         const errorData = await response.json();
         console.error(errorData);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong.",
+          description: `${errorData.message}`,
+        });
       }
     } catch (err) {
         console.error(err);
@@ -80,15 +91,24 @@ const handleRegister = async (firstName: string, lastName: string, username: str
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ value, password }),
       });
-
-        if (response.ok) {
-            const { token } = await response.json();
-            localStorage.setItem('accessToken', token);
-            setUser(jwtDecode<JwtPayload>(token));
-        } else {
-            const errorData = await response.json();
-            console.error(errorData);
-        }
+      if (response.ok) {
+          const { token, message } = await response.json();
+          localStorage.setItem('accessToken', token);
+          const userData = jwtDecode<JwtPayload>(token)
+          setUser(userData);
+          toast({
+            title: `${message}`,
+            description: `Logged in as ${userData.username}`,
+          });
+      } else {
+          const errorData = await response.json();
+          console.error(errorData);
+          toast({
+            variant: "destructive",
+            title: "Something went wrong.",
+            description: `${errorData.message}`,
+          });
+      }
     } catch (err) {
         console.error(err);
     }

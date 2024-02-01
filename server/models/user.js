@@ -34,9 +34,9 @@ module.exports = ((sequelize, DataTypes) => {
         ProfilePictureURL: {
             type: DataTypes.STRING
         },
-        Bio: {
-            type: DataTypes.TEXT
-        },
+        // Bio: {
+        //     type: DataTypes.TEXT
+        // },
     }, {
         hooks: {
             beforeCreate: async function (user) {

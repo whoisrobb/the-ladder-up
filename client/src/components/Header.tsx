@@ -39,6 +39,7 @@ const Header = () => {
   const { user, handleLogout, handleLogin } = useApp();
   const navigate = useNavigate();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<Input>({
@@ -50,11 +51,9 @@ const Header = () => {
   });
 
   const onSubmit = async(values: Input) => {
-    try {
-      await handleLogin(values.value, values.password);
-    } catch (err) {
-      console.error(err);
-    }
+    setIsSubmitting(true);
+    await handleLogin(values.value, values.password);
+    setIsSubmitting(false);
   }
 
   return (
@@ -158,7 +157,7 @@ const Header = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit">Submit</Button>
+                  <Button type="submit" disabled={isSubmitting}>Sign in</Button>
                 </form>
               </Form>
               <DialogFooter className='text-center'>

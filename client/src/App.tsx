@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Home from './pages/Home'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
@@ -8,6 +7,7 @@ import Post from './pages/Post'
 import Write from './pages/Write'
 import Edit from './pages/Edit'
 import { AppProvider } from './components/app-provider'
+import { Toaster } from './components/ui/toaster'
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
             <Route path='register' element={<Register />} />
           </Route>
         </Routes>
+        <Toaster />
       </AppProvider>
     </ThemeProvider>
   )
