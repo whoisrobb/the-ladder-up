@@ -1,12 +1,13 @@
 import { formatDate, serverUrl } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Editor from '@/components/Editor';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 import { Textarea } from '@/components/ui/textarea';
 import { useApp } from '@/components/app-provider';
+import { toast } from '@/components/ui/use-toast';
 
 type User = {
   Username: string;
@@ -72,10 +73,26 @@ const Post = () => {
   const fetchPosts = async () => {
     try {
       const response = await fetch(`${serverUrl}/user/post/${postId}`);
-      const data = await response.json();
-      setPostData(data);
+      if (response.ok) {
+        const data = await response.json();
+        setPostData(data);
+      } else {
+        const errorData = await response.json();
+        console.error(errorData);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong.",
+          description: `${errorData.error}`,
+        });
+        navigate('/');
+      }
     } catch (err) {
       console.error(err);
+      toast({
+          variant: 'destructive',
+          title: 'Something went went wrong!',
+          description: `${err}`,
+      });
     }
   };
 

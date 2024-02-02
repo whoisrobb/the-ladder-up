@@ -81,6 +81,11 @@ const handleRegister = async (firstName: string, lastName: string, username: str
       }
     } catch (err) {
         console.error(err);
+        toast({
+            variant: 'destructive',
+            title: 'Something went went wrong!',
+            description: `${err}`,
+        });
     }
   };
   
@@ -111,6 +116,11 @@ const handleRegister = async (firstName: string, lastName: string, username: str
       }
     } catch (err) {
         console.error(err);
+        toast({
+            variant: 'destructive',
+            title: 'Something went went wrong!',
+            description: `${err}`,
+        });
     }
   };
 

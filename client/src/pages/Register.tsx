@@ -22,11 +22,14 @@ import { registerSchema } from "@/lib/auth"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useApp } from "../components/app-provider"
+import { useState } from "react"
 
 type Input = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const { handleRegister } = useApp();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -40,11 +43,9 @@ const Register = () => {
   })
   
   const onSubmit = async(values: Input) => {
-    try {
-      await handleRegister(values.firstName, values.lastName, values.username, values.email, values.password);
-    } catch (err) {
-      console.error(err);
-    }
+    setIsSubmitting(true);
+    await handleRegister(values.firstName, values.lastName, values.username, values.email, values.password);
+    setIsSubmitting(false);
   }
 
   return (
@@ -158,7 +159,7 @@ const Register = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isSubmitting}>Submit</Button>
           </form>
         </Form>
       </CardContent>

@@ -12,9 +12,7 @@ import {
 import { useEffect, useState } from 'react'
 import { categories, serverUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { jwtDecode } from 'jwt-decode'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Trash } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -23,13 +21,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { toast } from '@/components/ui/use-toast'
 
-
-interface JwtPayload {
-    userId: number;
-    username: string;
-    email: string;
-}
 
 const Edit = () => {
   const { postId } = useParams();
@@ -37,11 +30,12 @@ const Edit = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [category, setCategory] = useState('');
-    const [userData, setUserData] = useState<JwtPayload | null>(null);
+    // const [userData, setUserData] = useState<JwtPayload | null>(null);
     const [summary, setTextareaValue] = useState('');
     const [title, setTextInputValue] = useState('');
     const [content, setContent] = useState<string | null>(null);
-    const [file, setFile] = useState<File | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    // const [file, setFile] = useState<File | null>(null);
     
     const onChange = (content: string) => {
         setContent(content)
@@ -49,22 +43,27 @@ const Edit = () => {
 
     useEffect(() => {
       fetchPost()
-        const accessToken = localStorage.getItem('accessToken');
-        if (accessToken) {
-          const data = jwtDecode(accessToken);
-          setUserData(data as JwtPayload | null);
-        }
     }, []);
     
   const fetchPost = async () => {
     try {
       const response = await fetch(`${serverUrl}/user/post/${postId}`);
-      const data = await response.json();
-      // console.log(data)
-      setTextInputValue(data.Title);
-      setTextareaValue(data.Summary);
-      setCategory(data.Category);
-      setContent(data.Content)
+      if (response.ok) {
+        const data = await response.json();
+        setTextInputValue(data.Title);
+        setTextareaValue(data.Summary);
+        setCategory(data.Category);
+        setContent(data.Content);
+      } else {
+        const errorData = await response.json();
+        console.error(errorData);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong.",
+          description: `${errorData.error}`,
+        });
+        navigate('/');
+      }
     } catch (err) {
       console.error(err);
     }
@@ -84,10 +83,20 @@ const Edit = () => {
             body: JSON.stringify({ title, summary, category, content })
         })
         if (response.ok) {
+          const data = await response.json();
+          toast({
+            title: 'Success!',
+            description: `Edited the post: ${data.Title}`,
+          });
           navigate('/');
         } else {
           const errorData = await response.json();
           console.error(errorData);
+          toast({
+            variant: 'destructive',
+            title: 'Something went wrong!',
+            description: `${errorData}`,
+          });
         }
     } catch (err) {
         console.error(err);
@@ -99,10 +108,29 @@ const Edit = () => {
       const response = await fetch(`${serverUrl}/user/post/delete/${postId}`, {
         method: 'DELETE'
       })
-      const res = await response.json();
-      navigate('/');
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: 'Success!',
+          description: `Deleted post: ${data.Title}`,
+        });
+        navigate('/');
+      } else {
+        const errorData = await response.json();
+        console.error(errorData);
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong!',
+          description: `${errorData}`,
+        });
+      }
     } catch (err) {
       console.error(err);
+      toast({
+          variant: 'destructive',
+          title: 'Something went went wrong!',
+          description: `${err}`,
+      });
     }
   };
 
@@ -130,7 +158,7 @@ const Edit = () => {
         </div>
       </DialogContent>
     </Dialog>
-        <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}} className="w-[56rem] flex flex-col gap-4">
+        <form onSubmit={async(e) => {e.preventDefault(); setIsSubmitting(true); await handleSubmit(); setIsSubmitting(false);}} className="w-[56rem] flex flex-col gap-4">
             <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="title">Title</Label>
                 <Input type="text" value={title} onChange={(e) => setTextInputValue(e.target.value)} id="title" placeholder="Add post title" />
@@ -140,7 +168,7 @@ const Edit = () => {
                 <Textarea value={summary} onChange={(e) => setTextareaValue(e.target.value)} placeholder="Add a short summary for your post" id="summary" />
             </div>
             <div className="flex gap-4">
-                <div className="grid w-full max-w-sm items-center gap-1.5">
+                {/* <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label htmlFor="cover-image">Cover image</Label>
                     <Input type="file" id="cover-image"
                         onChange={(e) => {
@@ -149,7 +177,7 @@ const Edit = () => {
                             }
                         }}
                     />
-                </div>
+                </div> */}
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                     <Label htmlFor="picture">Set category</Label>
                     <Select onValueChange={handleCategoryChange} value={category}>
@@ -176,7 +204,7 @@ const Edit = () => {
                 </div>
               </>}
             </div>
-            <Button>Submit changes</Button>
+            <Button disabled={isSubmitting}>Submit changes</Button>
         </form>
     </div>
   )

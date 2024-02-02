@@ -14,6 +14,7 @@ import { categories, serverUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
+import { toast } from '@/components/ui/use-toast'
 
 interface JwtPayload {
     userId: number;
@@ -30,6 +31,7 @@ const Write = () => {
     const [title, setTextInputValue] = useState('');
     const [content, setContent] = useState('');
     const [file, setFile] = useState<File | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const onChange = (content: string) => {
         setContent(content)
@@ -64,18 +66,33 @@ const Write = () => {
             body: formData
         })
         if (response.ok) {
-          navigate('/');
+            const data = await response.json();
+            toast({
+              title: 'Success!',
+              description: `Created a post: ${data.Title}`,
+            });
+            navigate('/');
         } else {
-          const errorData = await response.json();
-          console.error(errorData);
+            const errorData = await response.json();
+            console.error(errorData);
+            toast({
+                variant: 'destructive',
+                title: 'Something went went wrong!',
+                description: `${errorData}`,
+            });
         }
     } catch (err) {
         console.error(err);
+        toast({
+            variant: 'destructive',
+            title: 'Something went went wrong!',
+            description: `${err}`,
+        });
     }
   }
   return (
     <div className='flex flex-col items-center'>
-        <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}} className="w-[56rem] flex flex-col gap-4">
+        <form onSubmit={async(e) => {e.preventDefault(); setIsSubmitting(true); await handleSubmit(); setIsSubmitting(false)}} className="w-[56rem] flex flex-col gap-4">
             <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="title">Title</Label>
                 <Input type="text" value={title} onChange={(e) => setTextInputValue(e.target.value)} id="title" placeholder="Add post title" />
@@ -116,7 +133,7 @@ const Write = () => {
                     initialContent={''}
                 />
             </div>
-            <Button>Submit post</Button>
+            <Button disabled={isSubmitting}>Submit post</Button>
         </form>
     </div>
   )

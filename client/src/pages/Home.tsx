@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Post, Result } from '@/lib/types';
+import { toast } from '@/components/ui/use-toast';
 
 
 const Home = () => {
@@ -24,14 +25,23 @@ const Home = () => {
   }, [searchTerm])
 
   const fetchPosts = async () => {
-    if (category) {
-      const response = await fetch(`${serverUrl}/user/posts?category=${category}`);
-      const data = await response.json();
-      setPostsData(data);
-    } else {
-      const response = await fetch(`${serverUrl}/user/posts?category}`);
-      const data = await response.json();
-      setPostsData(data);
+    try {
+      if (category) {
+        const response = await fetch(`${serverUrl}/user/posts?category=${category}`);
+        const data = await response.json();
+        setPostsData(data);
+      } else {
+        const response = await fetch(`${serverUrl}/user/posts?category}`);
+        const data = await response.json();
+        setPostsData(data);
+      }
+    } catch (err) {
+      console.error(err);
+      toast({
+          variant: 'destructive',
+          title: 'Something went went wrong!',
+          description: `${err}`,
+      });
     }
   };
 
