@@ -68,6 +68,7 @@ const searchPosts = async (req, res) => {
 };
 
 /* GET ALL POSTS */
+/*
 const getAllPosts = async (req, res) => {
     try {
         const { category } = req.query;
@@ -97,7 +98,61 @@ const getAllPosts = async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 };
+*/
+const getAllPosts = async (req, res) => {
+    try {
+        const { category, page = 1, pageSize = 10 } = req.query;
 
+        const parsedPage = parseInt(page, 10) || 1;
+        const parsedPageSize = parseInt(pageSize, 10) || 10;
+
+        const offset = (parsedPage - 1) * parsedPageSize;
+
+        let posts;
+        let totalCount;
+
+        if (category) {
+            [posts, totalCount] = await Promise.all([
+                Post.findAll({
+                    include: [{
+                        model: User,
+                        attributes: ['Username'],
+                    }],
+                    where: {
+                        Category: category,
+                    },
+                    limit: parsedPageSize,
+                    offset: offset,
+                }),
+                Post.count({
+                    where: {
+                        Category: category,
+                    },
+                }),
+            ]);
+        } else {
+            [posts, totalCount] = await Promise.all([
+                Post.findAll({
+                    include: [{
+                        model: User,
+                        attributes: ['Username'],
+                    }],
+                    limit: parsedPageSize,
+                    offset: offset,
+                }),
+                Post.count(),
+            ]);
+        }
+
+        const totalPages = Math.ceil(totalCount / parsedPageSize);
+
+        res.status(200).json({ posts, totalPages, page: parsedPage });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+     
+  
 /* CREATE POST */
 const createPost = async (req, res) => {
     try {
@@ -121,49 +176,6 @@ const createPost = async (req, res) => {
 };
 
 /* GET ONE POST */
-//     try {
-//         const postId = req.params.postId;
-        
-//         const post = await Post.findOne({
-//             where: { id: postId },
-//             // include: [
-//             //     {
-//             //         model: User,
-//             //         as: 'Author'
-//             //     },
-//             //     {
-//             //         model: Like,
-//             //         as: 'Likes',
-//             //         include: [{
-//             //             model: User,
-//             //             as: 'LikedBy'
-//             //         }]
-//             //     },
-//             //     {
-//             //         model: Comment,
-//             //         as: 'Comments',
-//             //         include: [{
-//             //             model: User,
-//             //             as: 'Author'
-//             //         }]
-//             //     },
-//             // ],
-//             include: [
-//                 { model: User, as: 'Author' },
-//                 { model: Like, as: 'Likes', include: [{ model: User, as: 'LikedBy' }] },
-//                 { model: Comment, as: 'Comments', include: [{ model: User, as: 'Author' }] },
-//             ],      
-//         });
-
-//         if (!post) {
-//             return res.status(404).json({ error: 'Post not found' });
-//         }
-
-//         res.status(200).json(post);
-//     } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-// };
 const getSinglePost = async (req, res) => {
     try {
         const postId = req.params.postId;

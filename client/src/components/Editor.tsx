@@ -2,9 +2,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import {
   BlockNoteView,
   useBlockNote,
-  // darkDefaultTheme,
   Theme,
-  // lightDefaultTheme,
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
 import { useTheme } from "./theme-provider";
@@ -38,13 +36,10 @@ const darkTheme = {
       background: "#1e293b",
     },
     disabled: {
-      // text: "rgba(#1e293b, .7)",
       background: "#1e293b",
     },
     shadow: "rgba(#1e293b, .7)",
     border: "#1e293b",
-    // sideMenu: "#bababa",
-    // highlights: lightDefaultTheme.colors.highlights,
   },
   borderRadius: 4,
   fontFamily: "Inter, sans-serif",
@@ -57,18 +52,16 @@ const lightTheme = {
       background: "inherit",
     },
     menu: {
-      text: "inherit",
-      // background: "inherit",
+      text: "#1e293b",
     },
     hovered: {
-      // text: "#ffffff",
       background: "rgba(0, 0, 0, .1)",
     },
     selected: {
-      // text: "#ffffff",
       background: "#1e293b",
     },
     border: "rgba(0, 0, 0, .1)",
+    shadow: "none",
   },
   borderRadius: 4,
   fontFamily: "Inter, sans-serif",

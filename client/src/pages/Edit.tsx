@@ -109,10 +109,10 @@ const Edit = () => {
         method: 'DELETE'
       })
       if (response.ok) {
-        const data = await response.json();
+        // const data = await response.json();
         toast({
           title: 'Success!',
-          description: `Deleted post: ${data.Title}`,
+          description: 'Deleted post',
         });
         navigate('/');
       } else {

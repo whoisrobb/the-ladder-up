@@ -24,3 +24,8 @@ export const loginSchema = z.object({
     value: z.string().min(3).max(255),
     password: z.string().min(6).max(100)
 })
+
+export const postSchema = z.object({
+    title: z.string().min(3).max(255),
+    summary: z.string().min(3).max(255),
+})

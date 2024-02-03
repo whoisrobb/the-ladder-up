@@ -9,24 +9,19 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { categories, serverUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { toast } from '@/components/ui/use-toast'
+import { useApp } from '@/components/app-provider'
 
-interface JwtPayload {
-    userId: number;
-    username: string;
-    email: string;
-}
 
 const Write = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { user } = useApp();
 
     const [category, setCategory] = useState('');
-    const [userData, setUserData] = useState<JwtPayload | null>(null);
     const [summary, setTextareaValue] = useState('');
     const [title, setTextInputValue] = useState('');
     const [content, setContent] = useState('');
@@ -36,13 +31,6 @@ const Write = () => {
     const onChange = (content: string) => {
         setContent(content)
     }
-    useEffect(() => {
-        const accessToken = localStorage.getItem('accessToken');
-        if (accessToken) {
-          const data = jwtDecode(accessToken);
-          setUserData(data as JwtPayload | null);
-        }
-    }, []);
       
 
   const handleCategoryChange = (value: any) => {
@@ -61,7 +49,7 @@ const Write = () => {
     }
       
     try {
-        const response = await fetch(`${serverUrl}/user/post/create/${userData?.userId}`, {
+        const response = await fetch(`${serverUrl}/user/post/create/${user?.userId}`, {
             method: 'POST',
             body: formData
         })
@@ -95,11 +83,11 @@ const Write = () => {
         <form onSubmit={async(e) => {e.preventDefault(); setIsSubmitting(true); await handleSubmit(); setIsSubmitting(false)}} className="w-[56rem] flex flex-col gap-4">
             <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="title">Title</Label>
-                <Input type="text" value={title} onChange={(e) => setTextInputValue(e.target.value)} id="title" placeholder="Add post title" />
+                <Input type="text" value={title} onChange={(e) => setTextInputValue(e.target.value)} required id="title" placeholder="Add post title" />
             </div>
             <div className="grid w-full gap-1.5">
                 <Label htmlFor="summary">Post summary</Label>
-                <Textarea value={summary} onChange={(e) => setTextareaValue(e.target.value)} placeholder="Add a short summary for your post" id="summary" />
+                <Textarea value={summary} onChange={(e) => setTextareaValue(e.target.value)} required placeholder="Add a short summary for your post" id="summary" />
             </div>
             <div className="flex gap-4">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
