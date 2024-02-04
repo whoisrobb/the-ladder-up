@@ -80,7 +80,7 @@ const Write = () => {
   }
   return (
     <div className='flex flex-col items-center'>
-        <form onSubmit={async(e) => {e.preventDefault(); setIsSubmitting(true); await handleSubmit(); setIsSubmitting(false)}} className="w-[56rem] flex flex-col gap-4">
+        <form onSubmit={async(e) => {e.preventDefault(); setIsSubmitting(true); await handleSubmit(); setIsSubmitting(false)}} className="w-[56rem] mobile:w-full flex flex-col gap-4">
             <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="title">Title</Label>
                 <Input type="text" value={title} onChange={(e) => setTextInputValue(e.target.value)} required id="title" placeholder="Add post title" />

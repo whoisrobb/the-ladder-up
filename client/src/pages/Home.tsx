@@ -3,13 +3,16 @@ import { categories, formatDate, serverUrl } from '@/lib/utils'
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Post, Result } from '@/lib/types';
+import { TPost, Result } from '@/lib/types';
 import { toast } from '@/components/ui/use-toast';
+import { AvatarFallback, AvatarImage, Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 // import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Home = () => {
-  const [postsData, setPostsData] = useState<Post[]>([]);
-  const [category, setCategory] = useState<string | null>(null);
+  const [postsData, setPostsData] = useState<TPost[]>([]);
+  const [category, setCategory] = useState<string | undefined>('');
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Result[] | null>(null);
   const [inputActive, setInputActive] = useState(false);
@@ -17,6 +20,7 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(null);
 
   useEffect(() => {
+    setPostsData([]);
     fetchPosts();
   }, [category, currentPage]);
 
@@ -28,7 +32,7 @@ const Home = () => {
 
   const fetchPosts = async () => {
     try {
-      if (category) {
+      if (category !== '') {
         const response = await fetch(`${serverUrl}/user/posts?category=${category}&page=${currentPage}`);
         const { page, posts, totalPages } = await response.json();
         setPostsData(posts);
@@ -63,17 +67,17 @@ const Home = () => {
 
   return (
     <div className=''>
-      <div className="flex items-center gap-5 my-4">
+      <div className="flex items-center gap-5 my-4 mobile:flex-col mobile:gap-2">
         <i className="uil uil-layers text-9xl"></i>
         <div className="">
           <div className="text-5xl font-bold">Culture Canvas</div>
           <div className="text-muted-foreground">From soulful tunes to runway chic, blockbuster films to sports spectacles, chic interiors to culinary delights.</div>
         </div>
       </div>
-      <div className="flex items-center gap-12">
+      <div className="flex items-center gap-12 mobile:items-start mobile:gap-2">
         <div className="relative z-10 w-80">
           <Input
-            className='flex h-9 rounded-full w-80 border border-input bg-secondary px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+            className='flex h-9 rounded-full w-80 mobile:w-full border border-input bg-secondary px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -93,17 +97,33 @@ const Home = () => {
             ))}
           </div> : null}
         </div>
-        <div className="flex items-center gap-4">
-          {category === null ?
+
+        <div className="tablet:hidden laptop:hidden desktop:hidden">
+          <Popover>
+            <PopoverTrigger>
+                {category == '' ? <Button variant={'outline'}>All</Button>
+                :  <Button variant={'outline'}>{category}</Button>}
+            </PopoverTrigger>
+            <PopoverContent className='flex flex-col w-36'>
+              <Button variant={'ghost'} onClick={() => setCategory('')}>All</Button>
+              {categories.map((cat, index) => (
+                <Button variant={'ghost'} key={index} onClick={() => setCategory(cat)}>{cat}</Button>
+              ))}
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="flex items-center gap-4 mobile:hidden">
+          {category === '' ?
             <Button
-              onClick={() => setCategory(null)}
+              onClick={() => setCategory('')}
             >
               All
             </Button>
             :
             <Button
               variant='outline'
-              onClick={() => setCategory(null)}
+              onClick={() => setCategory('')}
             >
               All
             </Button>
@@ -126,8 +146,9 @@ const Home = () => {
       
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-6 my-8">
-        {postsData.map((post) => (
+      <div className="grid grid-cols-2 gap-x-4 gap-y-6 my-8 mobile:grid-cols-1">
+      {postsData.length > 0 ?
+        postsData.map((post) => (
           <div className="relative flex flex-col gap-x-2" key={post.PostID}>
             <Link to={`/post/${post.PostID}`} className=''>
               <div className="bg-slate-200 w-full h-80 overflow-hidden flex items-center justify-center">
@@ -135,8 +156,14 @@ const Home = () => {
               </div>
             </Link>
             <p className='text-[#2563eb] bg-secondary px-2 absolute top-4 left-4 rounded'>{post.Category}</p>
-            <div className="flex justify-between">
-              <Link to={`#`} className='font-playfairDisplay text-muted-foreground italic hover:text-primary'>By {post.User.Username}</Link>
+            <div className="flex justify-between my-2">
+              <Link to={`#`} className='font-playfairDisplay text-muted-foreground italic hover:text-primary flex items-center gap-2'>
+                <Avatar className='cursor-pointer'>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                {post.User.Username}
+              </Link>
               <p className='font-playfairDisplay text-muted-foreground italic'>{formatDate(post.createdAt)}</p>
             </div>
             <Link to={`/edit/${post.PostID}`}>
@@ -144,7 +171,22 @@ const Home = () => {
               <p className='text-sm text-muted-foreground'>{post.Summary}</p>
             </Link>
           </div>
-        ))}
+        ))
+        :
+        categories.map((_, index) =>  (
+          <div key={index} className="flex flex-col space-y-3">
+            <Skeleton className="h-60 w-full rounded-xl" />
+            <div className="flex">
+            <Skeleton className="h-12 w-12 rounded-full" />
+
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-[200px]" />
+            </div>
+          </div>)
+        )
+      }
       </div>
       {totalPages &&
       <div className="w-full flex justify-center">
