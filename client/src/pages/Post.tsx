@@ -105,7 +105,7 @@ const Post = () => {
             </Popover>
           </div>
         {postData ?
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 items-center">
           <div className="flex flex-col gap-4">
             <p className="text-[#2563eb] text-lg">{postData.Category}</p>
             <p className='text-5xl font-bold'>{postData.Title}</p>
@@ -121,7 +121,7 @@ const Post = () => {
           <div className="h-96 relative">
             <img src={`${serverUrl}/files/${postData.CoverImage}`} alt="" className='w-full h-full object-cover' />
           </div>
-          <div className='text-muted-foreground'>
+          <div className='text-muted-foreground' style={{ width: "calc(100% + 4rem)"}}>
             <Editor
               onChange={onChange}
               editable={false}

@@ -21,3 +21,13 @@ export const destructive = "hover:bg-accent text-red-500"
 export const outline = "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
 export const secondary = "bg-secondary text-secondary-foreground hover:bg-secondary/80"
 export const ghost = "hover:bg-accent hover:text-accent-foreground"
+
+// const users = [
+//   {
+//     firstName: 'Adanna',
+//     lastName: 'Osei',
+//     username: 'dannasei',
+//     email: 'oseiadanna@example.com',
+//     password: 'oseiadanna',
+//   }
+// ]
