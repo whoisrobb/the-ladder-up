@@ -29,5 +29,12 @@ export const ghost = "hover:bg-accent hover:text-accent-foreground"
 //     username: 'dannasei',
 //     email: 'oseiadanna@example.com',
 //     password: 'oseiadanna',
+//   },
+//   {
+//     firstName: 'Jabari',
+//     lastName: 'Mwangi',
+//     username: 'mwangi_jaba',
+//     email: 'jabarimwangi@example.com',
+//     password: 'mwangijaba',
 //   }
 // ]

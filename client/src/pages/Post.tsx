@@ -128,7 +128,7 @@ const Post = () => {
               initialContent={postData.Content}
             />
           </div>
-          <div className="">
+          <div className="w-full">
             <p className='text-3xl font-bold'>Comments</p>
             {postData.Comments && postData.Comments.length >= 1 ?
               <p className="text-muted-foreground">Add comment</p>
