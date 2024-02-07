@@ -33,12 +33,12 @@ const Register = () => {
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      firstName: 'Robert',
-      lastName: 'Muchiri',
-      username: 'iamkharri',
-      email: 'developedbyrobbie@gmail.com',
-      password: 'iamkharri',
-      confirmPassword: 'iamkharri'
+      firstName: '',
+      lastName: '',
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
     }
   })
   
@@ -67,9 +67,6 @@ const Register = () => {
                   <FormControl>
                     <Input placeholder="First Name" {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -84,9 +81,6 @@ const Register = () => {
                   <FormControl>
                     <Input placeholder="Last Name" {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -101,9 +95,6 @@ const Register = () => {
                   <FormControl>
                     <Input placeholder="Username" {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -118,9 +109,6 @@ const Register = () => {
                   <FormControl>
                     <Input placeholder="Email" {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -135,9 +123,6 @@ const Register = () => {
                   <FormControl>
                     <Input placeholder="Password" {...field} type="password" />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -152,9 +137,6 @@ const Register = () => {
                   <FormControl>
                     <Input placeholder="Confirm password" {...field} type="password" />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
