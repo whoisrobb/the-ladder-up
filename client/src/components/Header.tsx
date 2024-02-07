@@ -32,7 +32,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/input'
-import { customBtn, destructive } from '@/lib/utils'
+import { customBtn, destructive, ghost } from '@/lib/utils'
 
 type Input = z.infer<typeof loginSchema>;
 
@@ -63,18 +63,32 @@ const Header = () => {
         <i className="uil uil-layers text-3xl text-blue-500"></i>
         <Link to={'/'} className='font-light'>the <span className='font-bold font-playfairDisplay italic'>ladder</span> up</Link>
       </div>
-      <div className="flex items-center gap-2">
-        <Link to={'#'}>Archives</Link>
+      <div className="flex items-center gap-2 mobile:hidden">
+        {/* explore */}
         <Popover>
-          <PopoverTrigger>Legals</PopoverTrigger>
-          <PopoverContent>
-            <div className="flex flex-col">
-              <Link className='hover:bg-accent px-2 py-1 rounded' to={'#'}>Privacy Policy</Link>
-              <Link className='hover:bg-accent px-2 py-1 rounded' to={'#'}>Terms and Conditions</Link>
-              <Link className='hover:bg-accent px-2 py-1 rounded' to={'#'}>FAQs</Link>
-            </div>
+          <PopoverTrigger asChild>
+            <button className={`${customBtn} ${ghost}`}>
+              Explore
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className='grid grid-cols-2 gap-1 w-full'>
+            <Explore />
           </PopoverContent>
         </Popover>
+
+        {/* guidelines */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className={`${customBtn} ${ghost}`}>
+              Guidelines
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className='grid grid-cols-2 gap-1 w-full'>
+            <Guidelines />
+          </PopoverContent>
+        </Popover>
+
+        {/* discover */}
       </div>
       <div className="flex items-center gap-2">
         {user ?
@@ -116,7 +130,6 @@ const Header = () => {
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button>Login</Button>
-              {/* <Button variant="outline">Edit Profile</Button> */}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -137,9 +150,6 @@ const Header = () => {
                         <FormControl>
                           <Input placeholder="Username or email" {...field} />
                         </FormControl>
-                        {/* <FormDescription>
-                          This is your public display name.
-                        </FormDescription> */}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -154,9 +164,6 @@ const Header = () => {
                         <FormControl>
                           <Input placeholder="password" {...field} type='password' />
                         </FormControl>
-                        {/* <FormDescription>
-                          This is your public display name.
-                        </FormDescription> */}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -177,3 +184,101 @@ const Header = () => {
 }
 
 export default Header
+
+
+const Explore = () => {
+  return (
+    <>
+      <button className='bg-secondary w-full rounded p-2 flex flex-col items-baseline justify-center'>
+        <i className="uil uil-layers text-3xl text-blue-500"></i>
+        <div className='font-light mb-2'>the <span className='font-bold font-playfairDisplay italic'>ladder</span> up</div>
+        <div className="text-muted-foreground leading-tight w-48 text-left text-sm">Dynamic blog app with stunning user interface. Built with React, Node JS Express and PostgreSQL.</div>
+      </button>
+      <div className="flex flex-col gap-2">
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm w-48 flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Browse code</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Check out project source code on github
+          </p>
+        </Link>
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm w-48 flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Contact</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Reach out, or just say hi
+          </p>
+        </Link>
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm w-48 flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Contribute</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Code contributions, bug reports, or feature suggestions.
+          </p>
+        </Link>
+      </div>
+    </>
+  )
+}
+
+const Guidelines = () => {
+  return (
+    <>
+      <div className="w-60 flex flex-col gap-2">
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Privacy Policy</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Everything privacy
+          </p>
+        </Link>
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Terms & Conditions</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Terms and conditions governing use.
+          </p>
+        </Link>
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">FAQs</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Frequently asked questions about the project.
+          </p>
+        </Link>
+      </div>
+      <div className="w-60 flex flex-col gap-2">
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">GDPR Compliance</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Project's compliance with GDPR.
+          </p>
+        </Link>
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Data Retention Policy</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            Check out project source code on github
+          </p>
+        </Link>
+        <Link to={'#'}
+          className='flex flex-col items-baseline rounded-sm flex-wrap px-2 py-1 gap-1 hover:bg-secondary transition-colors'
+        >
+          <p className="">Data security</p>
+          <p className="text-muted-foreground text-sm leading-tight">
+            How user and post data is retained by the project.
+          </p>
+        </Link>
+      </div>
+    </>
+  )
+}

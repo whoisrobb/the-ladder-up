@@ -166,7 +166,7 @@ const Home = () => {
               </Link>
               <p className='font-playfairDisplay text-muted-foreground italic'>{formatDate(post.createdAt)}</p>
             </div>
-            <Link to={`/edit/${post.PostID}`}>
+            <Link to={`/post/${post.PostID}`}>
               <p className='text-2xl font-bold'>{post.Title}</p>
               <p className='text-sm text-muted-foreground'>{post.Summary}</p>
             </Link>
