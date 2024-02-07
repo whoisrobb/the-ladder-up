@@ -71,7 +71,7 @@ const Post = () => {
   };
 
   return (
-    <div className='flex justify-center'>
+    <div className='flex justify-center overflow-hidden'>
       <div className="w-[56rem] mobile:w-full">
           <div className="flex items-center justify-between my-2">
             <Button variant={'outline'} className='rounded-full p-3' onClick={() => {navigate('..')}}>
@@ -111,14 +111,14 @@ const Post = () => {
             <p className='text-5xl font-bold'>{postData.Title}</p>
             <p className="text-muted-foreground">{postData.Summary}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start">
             <Avatar className='cursor-pointer'>
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <p className="font-playfairDisplay italic text-muted-foreground"><Link to={`#`} className='hover:text-primary'>@{postData.User.Username}</Link>, {formatDate(postData.createdAt)}</p>
           </div>
-          <div className="h-96 relative">
+          <div className="h-96 relative self-start w-full">
             <img src={`${serverUrl}/files/${postData.CoverImage}`} alt="" className='w-full h-full object-cover' />
           </div>
           <div className='text-muted-foreground' style={{ width: "calc(100% + 4rem)"}}>
