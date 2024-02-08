@@ -29,7 +29,7 @@ Dynamic blog app with stunning user interface. Built with React, Node JS Express
 - [ ] Authentication with **Clerk**
 
 
-## Running Locally
+# Running Locally
 
 1. Clone the repository
 
@@ -38,7 +38,7 @@ Dynamic blog app with stunning user interface. Built with React, Node JS Express
    ```
 
 
-# Server (Express JS, Javascript)
+## Server (Express JS, Javascript)
 
 1. Navigate to the client directory
 
@@ -68,7 +68,7 @@ Dynamic blog app with stunning user interface. Built with React, Node JS Express
    ```
 
 
-# Frontend (React, Typescript)
+## Frontend (React, Typescript)
 
 1. Navigate to the client directory
 
