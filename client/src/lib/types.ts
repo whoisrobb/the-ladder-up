@@ -4,7 +4,7 @@ export type User = {
     LastName: string;
 };
 
-type Comment = {
+export type Comment = {
   CommentID: string;
   UserUserID: string;
   Content: string;

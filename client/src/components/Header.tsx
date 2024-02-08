@@ -32,7 +32,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/input'
-import { customBtn, destructive, ghost } from '@/lib/utils'
+import { customBtn, destructive, ghost, randomUser } from '@/lib/utils'
 
 type Input = z.infer<typeof loginSchema>;
 
@@ -41,6 +41,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDemoSubmitting, setIsDemoSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<Input>({
@@ -56,6 +57,14 @@ const Header = () => {
     await handleLogin(values.value, values.password);
     setIsSubmitting(false);
   }
+
+  const handleDemoLogin = async() => {
+    const values = randomUser()
+    setIsDemoSubmitting(true);
+    await handleLogin(values.username, values.password);
+    setIsDemoSubmitting(false);
+  }
+
 
   return (
     <div className='flex items-center justify-between py-2'>
@@ -169,6 +178,7 @@ const Header = () => {
                     )}
                   />
                   <Button type="submit" disabled={isSubmitting}>Sign in</Button>
+                  <Button type="button" variant={'secondary'} disabled={isDemoSubmitting} onClick={handleDemoLogin}>Demo</Button>
                 </form>
               </Form>
               <DialogFooter className='text-center'>
