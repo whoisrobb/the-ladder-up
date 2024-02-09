@@ -50,7 +50,7 @@ const Register = () => {
 
   return (
     <div className="py-12 flex justify-center">
-      <Card className="w-[350px]">
+      <Card className="w-[450px]">
         <CardHeader>
           <CardTitle>Register</CardTitle>
           <CardDescription>Join us today, culture freak.</CardDescription>
